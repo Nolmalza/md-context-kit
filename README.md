@@ -103,7 +103,7 @@ full rationale.
 You need Python 3.9 or newer.
 
 ```bash
-git clone https://github.com/botbas/md-context-kit
+git clone https://github.com/Nolmalza/md-context-kit
 cd md-context-kit
 
 # Create and activate a virtual environment

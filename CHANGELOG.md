@@ -30,5 +30,5 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
   per-file size, and startup-doc token budget.
 - Read-only Git helper that only ever prints a suggested command.
 
-[Unreleased]: https://github.com/botbas/md-context-kit/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/botbas/md-context-kit/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Nolmalza/md-context-kit/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.1.0

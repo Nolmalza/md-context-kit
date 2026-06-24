@@ -39,11 +39,11 @@ tokens = ["tiktoken>=0.5"]
 dev = ["pytest>=7", "build>=1.0"]
 
 [project.urls]
-Homepage = "https://github.com/botbas/md-context-kit"
-Repository = "https://github.com/botbas/md-context-kit"
-Documentation = "https://github.com/botbas/md-context-kit/tree/main/docs"
-Changelog = "https://github.com/botbas/md-context-kit/blob/main/CHANGELOG.md"
-Issues = "https://github.com/botbas/md-context-kit/issues"
+Homepage = "https://github.com/Nolmalza/md-context-kit"
+Repository = "https://github.com/Nolmalza/md-context-kit"
+Documentation = "https://github.com/Nolmalza/md-context-kit/tree/main/docs"
+Changelog = "https://github.com/Nolmalza/md-context-kit/blob/main/CHANGELOG.md"
+Issues = "https://github.com/Nolmalza/md-context-kit/issues"
 
 [project.scripts]
 mdctx = "md_context_kit.cli:main"
