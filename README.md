@@ -75,15 +75,15 @@ full rationale.
 
 ## Old Markdown Workflow vs MD Context Kit
 
-| Old Markdown workflow | MD Context Kit |
-| --- | --- |
-| Long, growing Markdown files | Short, focused context files |
-| The AI reads all docs every time | The AI reads startup docs first, others on demand |
-| Old and current notes mixed in one place | Separated current state, snapshots, decisions, and archive |
-| The same rules repeated across files | Rules referenced by stable context IDs |
-| Token usage is invisible | A token estimate report for every command |
-| Bloated changelog / pasted history | Compact context updates; Git keeps the real history |
-| Hard to continue after a break | A clear current state and explicit next steps |
+| Old Markdown workflow                       | MD Context Kit                                              |
+|---------------------------------------------|-------------------------------------------------------------|
+| Long, growing Markdown files                | Short, focused context files                                |
+| The AI reads all docs every time            | The AI reads startup docs first, others on demand           |
+| Old and current notes mixed in one place    | Separated current state, snapshots, decisions, and archive  |
+| The same rules repeated across files        | Rules referenced by stable context IDs                      |
+| Token usage is invisible                    | A token estimate report for every command                   |
+| Bloated changelog / pasted history         | Compact context updates; Git keeps the real history         |
+| Hard to continue after a break              | A clear current state and explicit next steps               |
 
 ## Features
 
@@ -219,12 +219,12 @@ controllable:
 
 Recommended limits (`mdctx` warns, never edits):
 
-| Target | Limit |
-| --- | --- |
-| `docs/02_CURRENT_STATE.md` | max 120 lines or 1,500 estimated tokens |
-| `docs/CHANGELOG.md` | max 3,000 estimated tokens |
-| Any single active Markdown file | warn above 2,500 estimated tokens |
-| Startup docs total | warn above 3,500 estimated tokens |
+| Target                            | Limit                                   |
+|-----------------------------------|-----------------------------------------|
+| `docs/02_CURRENT_STATE.md`        | max 120 lines or 1,500 estimated tokens |
+| `docs/CHANGELOG.md`               | max 3,000 estimated tokens              |
+| Any single active Markdown file   | warn above 2,500 estimated tokens       |
+| Startup docs total                | warn above 3,500 estimated tokens       |
 
 See [docs/token-limits.md](docs/token-limits.md).
 

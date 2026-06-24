@@ -1,7 +1,10 @@
 # context_registry.yml
 # Machine-readable registry of context files for AI agents.
-# Each entry describes one context file. See docs/registry-format.md for the
-# meaning of every field. Keep this list short and current.
+# Each entry describes one context file.  See docs/registry-format.md for
+# the meaning of every field.  Keep this list short and current.
+#
+# SETUP: replace "Project Name" with your project name, and replace each
+# YYYY-MM-DD with today's date when you initialise the context files.
 
 version: 1
 project: "Project Name"
@@ -14,7 +17,7 @@ context:
     file: AGENTS.md
     read_when: startup
     scope: global
-    last_updated: YYYY-MM-DD
+    last_updated: YYYY-MM-DD  # replace with today's date
 
   - id: index
     title: Context index
@@ -23,7 +26,7 @@ context:
     file: docs/00_INDEX.md
     read_when: startup
     scope: global
-    last_updated: YYYY-MM-DD
+    last_updated: YYYY-MM-DD  # replace with today's date
 
   - id: registry
     title: Context registry
@@ -32,7 +35,7 @@ context:
     file: docs/context_registry.yml
     read_when: startup
     scope: global
-    last_updated: YYYY-MM-DD
+    last_updated: YYYY-MM-DD  # replace with today's date
 
   - id: brief
     title: Project brief
@@ -41,7 +44,7 @@ context:
     file: docs/01_PROJECT_BRIEF.md
     read_when: startup
     scope: global
-    last_updated: YYYY-MM-DD
+    last_updated: YYYY-MM-DD  # replace with today's date
 
   - id: current_state
     title: Current state
@@ -50,7 +53,7 @@ context:
     file: docs/02_CURRENT_STATE.md
     read_when: startup
     scope: global
-    last_updated: YYYY-MM-DD
+    last_updated: YYYY-MM-DD  # replace with today's date
 
   - id: changelog
     title: Context changelog
@@ -59,7 +62,7 @@ context:
     file: docs/CHANGELOG.md
     read_when: on-demand
     scope: global
-    last_updated: YYYY-MM-DD
+    last_updated: YYYY-MM-DD  # replace with today's date
 
 # Soft limits (estimated tokens unless noted). Documentation for humans and
 # agents; mdctx uses matching built-in defaults for its warnings.

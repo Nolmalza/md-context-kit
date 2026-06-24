@@ -33,9 +33,13 @@ context efficiently, without token bloat.
 
 ## Placeholders
 
-Replace every placeholder below with your own project's details:
+Replace every `ALL CAPS` placeholder in this file and in the other template
+files with your own project's details before use:
 
-- Project Name
-- Module A, Module B
-- Service X
-- Feature Y
+- **`PROJECT NAME`** — your project's real name (used in headings and the
+  registry `project:` field).
+- **`MODULE A`, `MODULE B`** — your main source modules or packages.
+- **`SERVICE X`** — any external service or dependency your project relies on.
+- **`FEATURE Y`** — any major feature or subsystem worth calling out.
+
+Delete this section once placeholders have been replaced.
