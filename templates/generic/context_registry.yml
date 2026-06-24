@@ -1,0 +1,71 @@
+# context_registry.yml
+# Machine-readable registry of context files for AI agents.
+# Each entry describes one context file. See docs/registry-format.md for the
+# meaning of every field. Keep this list short and current.
+
+version: 1
+project: "Project Name"
+
+context:
+  - id: agents
+    title: Agent guide
+    type: guide
+    status: active
+    file: AGENTS.md
+    read_when: startup
+    scope: global
+    last_updated: YYYY-MM-DD
+
+  - id: index
+    title: Context index
+    type: index
+    status: active
+    file: docs/00_INDEX.md
+    read_when: startup
+    scope: global
+    last_updated: YYYY-MM-DD
+
+  - id: registry
+    title: Context registry
+    type: registry
+    status: active
+    file: docs/context_registry.yml
+    read_when: startup
+    scope: global
+    last_updated: YYYY-MM-DD
+
+  - id: brief
+    title: Project brief
+    type: brief
+    status: active
+    file: docs/01_PROJECT_BRIEF.md
+    read_when: startup
+    scope: global
+    last_updated: YYYY-MM-DD
+
+  - id: current_state
+    title: Current state
+    type: state
+    status: active
+    file: docs/02_CURRENT_STATE.md
+    read_when: startup
+    scope: global
+    last_updated: YYYY-MM-DD
+
+  - id: changelog
+    title: Context changelog
+    type: changelog
+    status: active
+    file: docs/CHANGELOG.md
+    read_when: on-demand
+    scope: global
+    last_updated: YYYY-MM-DD
+
+# Soft limits (estimated tokens unless noted). Documentation for humans and
+# agents; mdctx uses matching built-in defaults for its warnings.
+limits:
+  current_state_max_lines: 120
+  current_state_max_tokens: 1500
+  changelog_max_tokens: 3000
+  active_file_warn_tokens: 2500
+  startup_total_warn_tokens: 3500

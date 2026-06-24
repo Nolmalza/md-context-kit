@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "md-context-kit"
+version = "0.1.0"
+description = "A lightweight Markdown context system for AI-assisted projects."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "botbas" }]
+maintainers = [{ name = "botbas" }]
+keywords = [
+    "markdown",
+    "ai",
+    "context",
+    "documentation",
+    "token",
+    "cli",
+    "developer-tools",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Software Development :: Documentation",
+    "Topic :: Utilities",
+]
+dependencies = []
+
+[project.optional-dependencies]
+# Accurate token counting. Without it, mdctx falls back to chars / 4.
+tokens = ["tiktoken>=0.5"]
+dev = ["pytest>=7", "build>=1.0"]
+
+[project.urls]
+Homepage = "https://github.com/botbas/md-context-kit"
+Repository = "https://github.com/botbas/md-context-kit"
+Documentation = "https://github.com/botbas/md-context-kit/tree/main/docs"
+Changelog = "https://github.com/botbas/md-context-kit/blob/main/CHANGELOG.md"
+Issues = "https://github.com/botbas/md-context-kit/issues"
+
+[project.scripts]
+mdctx = "md_context_kit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+md_context_kit = ["py.typed"]
