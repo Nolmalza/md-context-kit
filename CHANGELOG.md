@@ -60,7 +60,7 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 - mdctx now dogfoods itself: `AGENTS.md`, `docs/00_INDEX.md`,
   `docs/context_registry.yml`, `docs/01_PROJECT_BRIEF.md`, `docs/02_CURRENT_STATE.md`,
   `mdctx.json` and `.mdctxignore` describe this repository's own context, and
-  `mdctx check` on the project reports no warnings (startup set 2,471 of 3,500 tokens).
+  `mdctx check` on the project reports no warnings (startup set 2,655 of 3,500 tokens).
 
 ### Fixed
 
