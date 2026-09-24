@@ -43,6 +43,16 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 - `file:` entries in the documented registry schema are now parsed (previously
   only `- file:` bullets were).
 
+### Documentation
+
+- Rewrote `README.md` as a project front page: banner, a "how it works" diagram, real
+  `mdctx check` output from two demo projects, and a measured context-cost chart. The
+  images are generated from HTML in this repository (`assets/*.png`).
+- The README now states plainly that the package is **not on PyPI yet** and is installed
+  from source; the earlier "once published" wording was speculative.
+- `README.md` keeps itself inside the tool's own budget: ~2,190 tokens, below the
+  2,500-token warning threshold that the previous 3,234-token README triggered.
+
 ## [Unreleased]
 
 ### Changed

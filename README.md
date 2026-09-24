@@ -1,188 +1,131 @@
+<div align="center">
+  <img src="assets/banner.png" alt="MD Context Kit — small, structured Markdown context for AI coding agents" width="100%">
+</div>
+
 # MD Context Kit
 
-**A lightweight Markdown context system for AI-assisted projects.**
+**Keep an AI coding agent's project context small, structured and measured.**
 
-MD Context Kit (`mdctx`) helps developers keep their Markdown context **fast,
-small, structured, and easy for AI coding agents to read — without token
-bloat.**
+[![version](https://img.shields.io/badge/version-0.2.0-58a6ff)](CHANGELOG.md)
+[![python](https://img.shields.io/badge/python-3.9%2B-3776ab)](pyproject.toml)
+[![license](https://img.shields.io/badge/license-MIT-2ea043)](LICENSE)
+[![tests](https://img.shields.io/badge/tests-21%20passing-2ea043)](tests/test_mdctx.py)
+[![dependencies](https://img.shields.io/badge/core%20dependencies-0-6e7681)](pyproject.toml)
+[![PRs](https://img.shields.io/badge/PRs-welcome-8957e5)](CONTRIBUTING.md)
 
----
+`mdctx` is a zero-dependency Python CLI for the Markdown an AI coding agent has to
+read before it can work. It defines the smallest set of files the agent should read
+every session, checks them against explicit line and token budgets, prices the reading
+list of each task, and keeps older material in an archive that is never loaded by
+default.
 
-## What it does
+It **measures and suggests** — it never edits your code, stages, commits or pushes.
 
-`mdctx` gives a project a small, deliberate set of Markdown context files,
-checks that they stay within sensible size limits, and estimates how many tokens
-an AI agent will spend reading them. It defines which files an agent should read
-first ("startup docs"), keeps a machine-readable registry of every context file,
-and provides a simple **refresh / snapshot / archive** workflow so old notes do
-not pile up in front of the agent.
+## The problem
 
-It is intentionally generic: the templates are blank and use neutral
-placeholders, so you can adapt them to any project.
+- **Docs grow without bound.** A "current state" note quietly becomes a journal.
+- **Old and current information mix**, so neither a human nor an agent knows what still
+  applies — and a stale note is worse than no note.
+- **History gets duplicated into Markdown** (diffs, logs, whole files) even though Git
+  already stores it.
+- **Token cost is invisible** until a session burns its context window on paperwork.
 
-## Why it exists
+Agents re-read that folder on every session, sometimes on every turn. Everything you add
+early is paid for again on each later turn.
 
-AI coding agents re-read your project's docs on every session — and often on
-every task. If those docs are large, unstructured, or full of logs and diffs,
-the agent burns a big share of its context window on documentation before it
-does any useful work, and it can be misled by outdated notes. MD Context Kit
-keeps the context small, current, and structured so the agent loads the right
-information cheaply.
-
-## The problem with traditional Markdown project notes
-
-In a long-running, AI-assisted project, ordinary Markdown notes tend to decay in
-predictable ways:
-
-- **They grow without bound.** A "current state" note becomes a journal; a
-  design doc accumulates every decision ever discussed.
-- **Old and current information get mixed together,** so neither a person nor an
-  agent can tell which parts still apply.
-- **History gets duplicated into Markdown** — full Git logs, diffs, terminal
-  output, whole source files, long JSON — even though Git already stores all of
-  it.
-- **Token cost is invisible.** Nothing tells you that your docs now cost
-  thousands of tokens to read.
-
-The result is context that is expensive to load and easy to get wrong.
-
-## How MD Context Kit solves it
-
-- A small set of **startup docs** the agent reads first, instead of everything.
-- A **registry** (`context_registry.yml`) describing each file — its type,
-  status, when to read it, and what it covers.
-- **Token estimation** so the cost of your context is visible, with warnings
-  when files get too big.
-- A clear separation of **current state**, **snapshots**, **decisions**, and
-  **archive**, so old material is kept for history without being reloaded every
-  session.
-- A **refresh / snapshot / archive** workflow that replaces the ever-growing
-  journal — and never touches your application code or Git history.
-
-The division of labour is simple: **Git stores the exact history of file
-changes; Markdown stores the meaning** — current state, rules, decisions, and
-next steps. See [docs/why-md-context-kit.md](docs/why-md-context-kit.md) for the
-full rationale.
-
-## Benefits compared with normal `.md` documentation
-
-- Smaller, focused files instead of one large catch-all note.
-- The agent reads the right context first, not the whole folder.
-- Current information is clearly separated from old material.
-- Token usage is measured and capped with warnings, not invisible.
-- A repeatable workflow keeps context fresh over months, not just on day one.
-- Nothing is automated against your repository — you stay in control of Git.
-
-## Old Markdown Workflow vs MD Context Kit
-
-| Old Markdown workflow                       | MD Context Kit                                              |
-|---------------------------------------------|-------------------------------------------------------------|
-| Long, growing Markdown files                | Short, focused context files                                |
-| The AI reads all docs every time            | The AI reads startup docs first, others on demand           |
-| Old and current notes mixed in one place    | Separated current state, snapshots, decisions, and archive  |
-| The same rules repeated across files        | Rules referenced by stable context IDs                      |
-| Token usage is invisible                    | A token estimate report for every command                   |
-| Bloated changelog / pasted history         | Compact context updates; Git keeps the real history         |
-| Hard to continue after a break              | A clear current state and explicit next steps               |
-
-## Features
-
-- `mdctx` command line with `init`, `check`, `scan`, `tokens`, `tasks`, `dupes`,
-  `refresh` (`--apply`, `--tokens`), `snapshot`, and `rotate`.
-- `.mdctxignore` + `mdctx.json`: per-project ignore rules and limits, with
-  dependency and build folders (`vendor`, `node_modules`, `dist`, `build`, …)
-  ignored by default.
-- `--json` on every command, so an agent or CI job can act on the numbers.
-- `check --strict` exits non-zero when there are warnings, so it can gate a
-  workflow.
-- `mdctx tasks` prices each reading list in the registry, and `mdctx dupes`
-  finds context files that cost tokens twice.
-- Generic, blank Markdown templates you adapt to your project.
-- Required-file checks with clear warnings.
-- Token estimation via `tiktoken` when installed, with a language-aware fallback
-  (Thai ~1 token per character, Latin ~4 characters per token).
-- Size limits for the current-state doc, changelog, individual files, and the
-  startup set.
-- A machine-readable context registry.
-- A read-only Git helper that only ever **prints** a suggested command.
-- No dependencies required for the core tool.
-
-## Installation (local development)
-
-You need Python 3.9 or newer.
+## Quick start
 
 ```bash
 git clone https://github.com/Nolmalza/md-context-kit
 cd md-context-kit
-
-# Create and activate a virtual environment
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
-
-# Install in editable mode, with accurate token counting
-pip install -e ".[tokens]"
+python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+pip install -e ".[tokens]"                            # tiktoken = accurate token counts
 ```
 
-Once published to PyPI you will also be able to:
+Then, in any project:
 
 ```bash
-pip install md-context-kit
-pip install "md-context-kit[tokens]"   # accurate token counts
+cd ~/my-project
+mdctx init          # create the context files from templates
+mdctx check         # are they present, within budget, and healthy?
+mdctx tokens        # what does an agent pay per session?
+mdctx scan          # which docs are biggest? (largest first)
 ```
 
-## CLI command examples
+Nothing is written unless you ask: files are only created by `mdctx init` or
+`mdctx refresh --apply`. Not on PyPI yet — install from source as above.
 
-```bash
-mdctx init                          # create missing context files from templates
-mdctx check                         # check required files exist and are healthy
-mdctx check --strict                # same, but exit non-zero on warnings
-mdctx scan                          # list context files with line and token counts
-mdctx scan --all                    # list every tracked file, not just the top 40
-mdctx tokens                        # estimated tokens: startup / active / all docs
-mdctx tasks                         # token cost of each task's reading list
-mdctx dupes                         # context files whose content is identical
-mdctx refresh                       # dry run: report what a refresh would create
-mdctx refresh --apply               # create missing files from templates
-mdctx refresh --apply --tokens      # apply, and also print the token report
-mdctx snapshot                      # create a short, dated snapshot
-mdctx rotate                        # move old snapshots into the archive
+## See it work
 
-# Machine-readable output for agents and CI
-mdctx check --json
-mdctx tokens --json -C ./path/to/project
-```
+<div align="center">
+  <img src="assets/terminal.png" alt="mdctx init and mdctx check on a healthy project, and mdctx check warnings on a project that outgrew its budget" width="100%">
+</div>
 
-You can also run it as a module: `python -m md_context_kit.cli check`.
+A healthy startup set costs **1,273 tokens**; once that folder turns into a journal,
+`check` says exactly which file broke which budget and what to do about it.
 
-## Recommended project structure
+## How it works
 
-```
-your-project/
-├── AGENTS.md                     How an AI agent should read this project
-└── docs/
-    ├── 00_INDEX.md               Map of the context docs
-    ├── context_registry.yml      Machine-readable registry of context files
-    ├── 01_PROJECT_BRIEF.md       Overview, rules, decisions, next steps
-    ├── 02_CURRENT_STATE.md       Short snapshot of where things stand
-    ├── CHANGELOG.md              Dated update summaries
-    ├── snapshots/                Short, dated snapshots (from `snapshot`)
-    └── archive/                  Older material; not read by default
-```
+<div align="center">
+  <img src="assets/how-it-works.png" alt="Repository docs pass through mdctx read-only checks and are split into startup, on-demand and ignored tiers before an agent reads them" width="100%">
+</div>
 
-## Configuration (`.mdctxignore`, `mdctx.json`)
+1. **Startup docs** — the few files an agent reads first, every session
+   (`AGENTS.md`, `docs/00_INDEX.md`, `docs/context_registry.yml`,
+   `docs/01_PROJECT_BRIEF.md`, `docs/02_CURRENT_STATE.md`).
+2. **On-demand docs** — everything else, read only when a task needs it.
+3. **Archive and generated noise** — kept in the repository (Git is the history), but
+   excluded from context and from the token count.
 
-Both files are optional and live in the project root.
+The registry gives every context file a stable `id`, a `type`, a `status`, a `read_when`
+hint (`startup`, `on-demand`, `never`) and a `scope`, so rules can be referenced instead
+of repeated. See [docs/registry-format.md](docs/registry-format.md).
 
-`.mdctxignore` is plain text, one pattern per line (`#` starts a comment), in the
-spirit of `.gitignore`:
+## Measured on real projects
 
-```
-artifacts/
-deploy/
-*.zip
-```
+<div align="center">
+  <img src="assets/context-cost.png" alt="Chart: three real repositories, showing context kept versus dependency and generated Markdown skipped by the default ignore rules" width="100%">
+</div>
 
-`mdctx.json` holds structured overrides:
+Dependency, build and cache folders (`vendor`, `node_modules`, `dist`, `build`,
+`target`, `__pycache__`, …) are ignored by default, and every command reports how many
+files and tokens the rules removed — so the numbers stay explainable. Reproduce with
+`mdctx tokens -C <project> --json`.
+
+## Features
+
+- `init`, `check` (`--strict`), `scan` (`--all`), `tokens`, `tasks`, `dupes`,
+  `refresh` (`--apply`), `snapshot`, `rotate`.
+- `--json` on every command, for agents and CI.
+- `.mdctxignore` + `mdctx.json`: per-project ignore rules, limits and startup set.
+- `mdctx tasks` prices each reading list in `context_registry.yml`; `mdctx dupes` finds
+  context files that cost tokens twice.
+- Registry health checks: dangling file references, `read_when: never` files that are
+  still startup docs, and "loose" docs no section points at.
+- Accurate counts via `tiktoken`, with a language-aware fallback for when it is missing
+  (Thai ≈ 1 token per character, Latin ≈ 4 characters per token — not a flat `chars / 4`).
+- Generic, blank templates you adapt to your project.
+
+## CLI reference
+
+| Command | What it does |
+|---|---|
+| `mdctx init` | Create missing context files from templates |
+| `mdctx check [--strict] [--json]` | Required files, limits, registry health; `--strict` exits non-zero on warnings |
+| `mdctx scan [--all]` | Context files with line/token counts, largest first |
+| `mdctx tokens [--json]` | Startup / active / all-docs token totals, plus what the rules ignored |
+| `mdctx tasks` | Token cost of each task's reading list |
+| `mdctx dupes` | Files whose content is identical but counted twice |
+| `mdctx refresh [--apply] [--tokens]` | Report (or create) what the structure is missing |
+| `mdctx snapshot` | Create a short dated snapshot in `docs/snapshots/` |
+| `mdctx rotate` | Move old snapshots to `docs/archive/snapshots/` (keeps the newest) |
+
+`python -m md_context_kit.cli <command>` also works.
+
+## Configuration
+
+Both files are optional and live in the project root. `.mdctxignore` takes one pattern
+per line (`#` starts a comment); `mdctx.json` holds structured overrides:
 
 ```json
 {
@@ -190,155 +133,66 @@ deploy/
   "required_files": ["AGENTS.md", "docs/02_CURRENT_STATE.md"],
   "startup_files": ["AGENTS.md", "docs/02_CURRENT_STATE.md"],
   "current_state": "docs/02_CURRENT_STATE.md",
-  "changelog": "docs/12_CHANGELOG.md",
+  "changelog": "docs/CHANGELOG.md",
   "registry": "docs/context_registry.yml",
   "limits": { "startup_total_warn_tokens": 3500 }
 }
 ```
 
-Dependency, build and cache directories (`vendor`, `node_modules`, `dist`,
-`build`, `target`, `__pycache__`, …) are ignored by default. Every command
-reports how many files and tokens the ignore rules removed, so the numbers stay
-explainable.
+## Budgets `mdctx` warns about (never edits)
 
-Real example: on a Laravel project the scanner counted `vendor/**` as context and
-reported ~606,000 tokens across 334 files — 90% of it dependency documentation
-that no agent should ever load. With the default ignore rules the same project
-reports ~63,000 tokens across 35 real context files.
+| Target | Limit |
+|---|---|
+| `docs/02_CURRENT_STATE.md` | 120 lines / 1,500 tokens |
+| Changelog | 3,000 tokens |
+| Any single active Markdown file | warn above 2,500 tokens |
+| Startup docs total | warn above 3,500 tokens |
 
-## Startup docs
+All four are configurable per project. See [docs/token-limits.md](docs/token-limits.md).
 
-The **startup docs** are the files an AI agent should read first, every session.
-They are the smallest set needed to understand the project and continue work:
+## Recommended layout
 
-- `AGENTS.md` — how to read this project.
-- `docs/00_INDEX.md` — a map of the context docs.
-- `docs/context_registry.yml` — the machine-readable registry.
-- `docs/01_PROJECT_BRIEF.md` — the stable project overview and rules.
-- `docs/02_CURRENT_STATE.md` — a short snapshot of where things stand.
-
-Keeping this set small and within the token budget (see below) is the single
-most effective way to control context cost.
-
-## The `context_registry.yml` file
-
-The registry is a small YAML file describing every context file. Each entry has
-a stable `id`, a `title`, a `type`, a `status`, the `file` path, a `read_when`
-hint (`startup`, `on-demand`, or `never`), a `scope`, and a `last_updated` date:
-
-```yaml
-context:
-  - id: current_state
-    title: Current state
-    type: state
-    status: active
-    file: docs/02_CURRENT_STATE.md
-    read_when: startup
-    scope: global
-    last_updated: 2026-06-25
+```
+your-project/
+├── AGENTS.md                     how an agent should read this project
+└── docs/
+    ├── 00_INDEX.md               map of the context docs
+    ├── context_registry.yml      machine-readable registry
+    ├── 01_PROJECT_BRIEF.md       stable overview, rules, decisions
+    ├── 02_CURRENT_STATE.md       short snapshot of where things stand
+    ├── CHANGELOG.md              dated update summaries
+    ├── snapshots/                short dated snapshots
+    └── archive/                  older material; never read by default
 ```
 
-The stable `id` lets you refer to a piece of context from elsewhere instead of
-repeating a rule. Every field is documented in
-[docs/registry-format.md](docs/registry-format.md).
+## Workflow: refresh → snapshot → rotate
 
-## Refresh / snapshot / archive workflow
-
-- **Refresh** — re-check the context set and fill in anything missing
-  (`mdctx refresh`, or `mdctx refresh --apply` to create files). Use this to
-  bring a project back to the expected structure.
-- **Snapshot** — capture a short, dated view of the current state
-  (`mdctx snapshot`). Snapshots live in `docs/snapshots/`.
-- **Archive** — move old snapshots out of the active set with `mdctx rotate`,
-  which keeps the newest few and moves the rest to `docs/archive/snapshots/`.
-  Archive content is **not read by default**, so history is preserved without
-  paying for it on every session.
-
-This project deliberately avoids "commit" as a workflow verb. Prefer
-**refresh**, **snapshot**, **context update**, **docs update**, or **update
-summary**.
-
-## Token usage estimation
-
-`mdctx` estimates the token cost of your context so it is visible and
-controllable:
-
-- With [`tiktoken`](https://github.com/openai/tiktoken) installed, counts are
-  accurate (`cl100k_base`). Otherwise `mdctx` uses a language-aware fallback:
-  Thai costs ~1 token per character, Latin ~0.25, so a Thai document is not
-  under-counted by roughly 4x the way a flat `character_count / 4` would.
-  Install `tiktoken` for any Thai-heavy project.
-- `mdctx tokens` reports three totals: **startup docs**, **active docs**, and
-  **all docs (incl. archive)**.
-
-Recommended limits (`mdctx` warns, never edits):
-
-| Target                            | Limit                                   |
-|-----------------------------------|-----------------------------------------|
-| `docs/02_CURRENT_STATE.md`        | max 120 lines or 1,500 estimated tokens |
-| `docs/CHANGELOG.md`               | max 3,000 estimated tokens              |
-| Any single active Markdown file   | warn above 2,500 estimated tokens       |
-| Startup docs total                | warn above 3,500 estimated tokens       |
-
-See [docs/token-limits.md](docs/token-limits.md).
+Bring a project back to the expected structure (`mdctx refresh`, or `refresh --apply`),
+freeze a dated view at a milestone (`mdctx snapshot`), and move what has aged out of the
+active set (`mdctx rotate`). Archive content is preserved for history but **not read by
+default**, so it never inflates a session.
 
 ## Safety rules
 
-MD Context Kit is deliberately conservative:
+- Never modifies application code — only Markdown context files, only when asked.
+- Never runs `git commit`, never stages, never pushes; it *prints* a suggested command.
+- Never reads `docs/archive/` by default.
+- No telemetry, no network calls, no dependencies required for the core tool.
 
-- **It never modifies your application code.** It only ever creates or moves
-  Markdown context files, and only when you ask it to.
-- **It never runs `git commit` automatically.**
-- **It never pushes automatically.**
-- **It never reads `docs/archive/` content by default,** so archived material
-  does not leak into context or token counts.
+## Documentation
 
-Files are only created in `init` mode or `refresh --apply` mode. When files
-change, `mdctx` prints a **suggested** Git command for you to review and run.
+[docs/why-md-context-kit.md](docs/why-md-context-kit.md) ·
+[docs/usage.md](docs/usage.md) ·
+[docs/token-limits.md](docs/token-limits.md) ·
+[docs/registry-format.md](docs/registry-format.md) ·
+[docs/public-template-rules.md](docs/public-template-rules.md) ·
+[CHANGELOG.md](CHANGELOG.md)
 
-## Example workflow: a new project
+## Contributing
 
-```bash
-cd my-new-project
-mdctx init                       # create the context files
-# edit the files, replacing placeholders with your project details
-mdctx check                      # confirm everything is present and small
-mdctx tokens                     # see the startup token budget
-# ... do work, keep docs/02_CURRENT_STATE.md updated ...
-mdctx snapshot                   # capture a dated snapshot at a milestone
-```
-
-Then review the suggested Git command `mdctx` prints and run it yourself.
-
-## Example workflow: an existing project
-
-```bash
-cd my-existing-project
-mdctx refresh                    # dry run: see what is missing, change nothing
-mdctx refresh --apply --tokens   # create missing files and show the token report
-mdctx scan                       # find which docs are largest
-# trim docs/02_CURRENT_STATE.md and split oversized files as flagged
-mdctx rotate                     # move old snapshots into the archive
-mdctx check                      # confirm the context is healthy
-```
-
-## Suggested Git commands (printed, never executed)
-
-`mdctx` never stages, commits, or pushes. When files change, it prints a
-suggestion like the following for you to review and run yourself:
-
-```bash
-git add -A && git commit -m "docs: context update"
-```
-
-For an initial setup it might suggest `docs: initialize context`, and for a
-rotation `docs: rotate snapshots`. These are only suggestions — running them is
-always your decision.
-
-## Credits
-
-Created and maintained by **botbas**.
+Issues and pull requests are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and
+[SECURITY.md](SECURITY.md). Run the test suite with `pip install -e ".[dev]" && pytest`.
 
 ## License
 
-Released under the [MIT License](LICENSE). Copyright (c) 2026 botbas.
+[MIT](LICENSE) © 2026 botbas.
