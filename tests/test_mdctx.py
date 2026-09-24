@@ -71,6 +71,27 @@ def test_version_matches_pyproject():
     assert __version__ == declared
 
 
+def test_demo_fixture_script_reproduces_the_figure_numbers(tmp_path: Path):
+    """The README figures quote this fixture, so the generator has to keep working."""
+    import subprocess
+    import sys
+
+    script = Path(__file__).resolve().parents[1] / "scripts" / "make-demo-fixture.py"
+    subprocess.run(
+        [sys.executable, str(script), "--into", str(tmp_path / "demo")],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    root = tmp_path / "demo"
+    assert (root / "AGENTS.md").exists()
+    assert (root / "docs" / "02_CURRENT_STATE.md").exists()
+
+    result = scan_detailed(root)
+    assert len(result.files) == 6      # six context documents
+    assert result.ignored_files >= 40  # the dependency tree the ignore rules remove
+
+
 def test_thai_detection():
     assert thai_char_count(THAI) > 40
     assert thai_ratio(THAI) > 0.9

@@ -21,7 +21,7 @@ Markdown context small, measured and structured. The product is `src/md_context_
 
 ## Rules for working in this repository
 
-- Run `pytest -q` (23 tests) before proposing any change; the tests are the release gate.
+- Run `pytest -q` (24 tests) before proposing any change; the tests are the release gate.
 - Never stage, commit or push without the owner's explicit instruction.
 - Keep the core path dependency-free; `tiktoken` stays an optional extra.
 - The tool is read-only **by contract**: it must never modify a project's code, stage,

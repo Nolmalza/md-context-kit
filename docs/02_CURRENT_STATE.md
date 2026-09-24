@@ -4,23 +4,26 @@ Snapshot, not history. Detail: `CHANGELOG.md`; rationale: `docs/why-md-context-k
 
 ## Stage
 
-**0.2.1 released.** PR #2 was merged into `main` as `beedcda`, tagged `v0.2.1`, and published
-as a GitHub release. It carries this repository's own context set — the dogfooding work —
-plus a fix for ignore patterns on dot-directories: dogfooding found that `_match_pattern`
-stripped the leading dot, so `.pytest_cache/`, `.venv/` and the rest of the default list were
-still counted as context and could not be excluded by a project either.
+**0.2.2 — documentation hygiene** (PR #4, tag `v0.2.2`). This release removes every reference to
+a private project from this public repository: the README figures now measure the demo fixture
+shipped in `scripts/make-demo-fixture.py` and this repository itself, and `LICENSE`,
+`pyproject.toml`, `README.md` and `SECURITY.md` name the maintainer (Nolmalza) instead of the
+company that builds the tool.
 
-Before that, **0.2.0** (PR #1, merge commit `340771c`, tag `v0.2.0`, GitHub release with notes
-from `CHANGELOG.md`) shipped `.mdctxignore` + `mdctx.json` project configuration, `--json` on
-every command, `check --strict` as a CI gate, `mdctx tasks` and `mdctx dupes`, registry health
-checks (dangling references, `read_when: never` in the startup set, loose docs), and a
-language-aware token fallback for Thai-heavy projects. First release: `v0.1.0` (`888a9ce`).
+**0.2.1 released** (PR #2, merge commit `beedcda`, tag `v0.2.1`): this repository's own context
+set — the dogfooding work — plus a fix for ignore patterns on dot-directories. Dogfooding found
+that `_match_pattern` stripped the leading dot, so `.pytest_cache/`, `.venv/` and the rest of the
+default list were still counted as context and could not be excluded by a project either.
+
+Earlier, **0.2.0** (PR #1, merge commit `340771c`, tag `v0.2.0`) shipped `.mdctxignore` +
+`mdctx.json` project configuration, `--json` on every command, `check --strict` as a CI gate,
+`mdctx tasks` and `mdctx dupes`, registry health checks, and a language-aware token fallback for
+Thai-heavy projects. First release: `v0.1.0` (`888a9ce`).
 
 ## Test status
 
-`pytest -q` → **23 passed** (21 at the `v0.2.0` tag; two regression tests were added for the
-ignore bug, and the two version assertions no longer hardcode it). No CI workflow is
-configured yet; the suite is run locally before every release.
+`pytest -q` → **24 passed**. No CI workflow is configured yet; the suite is run locally before
+every release.
 
 ## Context budget (this repository, measured)
 

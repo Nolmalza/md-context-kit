@@ -4,5 +4,5 @@ The package keeps project Markdown small, structured, and cheap for AI coding
 agents to read. See :mod:`md_context_kit.cli` for the ``mdctx`` command line.
 """
 
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 __all__ = ["__version__"]
