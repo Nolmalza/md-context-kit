@@ -1,0 +1,81 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:1280px;height:600px;font-family:"Segoe UI",Arial,sans-serif;background:#0b1020;color:#e8eefc;overflow:hidden}
+  .wrap{width:1280px;height:600px;padding:38px 46px;background:radial-gradient(900px 400px at 88% 0%,rgba(88,166,255,.16),transparent 62%),linear-gradient(160deg,#0b1020,#0c142a 60%,#0b1020)}
+  .title{font-size:26px;font-weight:800;color:#fff}
+  .sub{margin-top:8px;font-size:15.5px;color:#a9b8d4}
+  .flow{display:flex;align-items:stretch;gap:16px;margin-top:30px}
+  .card{background:#0e1526;border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:18px 18px 16px;box-shadow:0 14px 34px rgba(0,0,0,.35)}
+  .card h3{font-size:14px;letter-spacing:.14em;text-transform:uppercase;color:#7cc4ff;margin-bottom:12px}
+  .repo{flex:1.05}
+  .engine{flex:.95;border-color:rgba(124,196,255,.42);background:linear-gradient(180deg,rgba(124,196,255,.10),rgba(14,21,38,.9))}
+  .out{flex:1.28}
+  .agent{flex:.95}
+  ul{list-style:none;font-size:14.5px;line-height:1.62;color:#cfdcf3}
+  li{padding:3px 0}
+  code{font-family:Consolas,"Cascadia Mono",monospace;font-size:13px;background:rgba(124,196,255,.10);border:1px solid rgba(124,196,255,.22);border-radius:5px;padding:1px 5px;color:#cfe0ff}
+  .arrow{display:flex;align-items:center;font-size:26px;color:#5d7ba6}
+  .rowhead{display:flex;justify-content:space-between;align-items:center;font-size:14.5px;padding:7px 10px;border-radius:9px;margin-bottom:7px}
+  .start{background:rgba(94,224,122,.10);border:1px solid rgba(94,224,122,.35)}
+  .demand{background:rgba(124,196,255,.08);border:1px solid rgba(124,196,255,.28)}
+  .arch{background:rgba(255,159,143,.09);border:1px solid rgba(255,159,143,.30)}
+  .cost{font-family:Consolas,monospace;font-size:13px;color:#a9b8d4}
+  .note{margin-top:26px;display:flex;gap:14px;align-items:center;font-size:14.5px;color:#a9b8d4}
+  .tag{font-family:Consolas,monospace;font-size:13px;border:1px solid rgba(94,224,122,.4);color:#5ee07a;background:rgba(94,224,122,.08);border-radius:999px;padding:5px 11px}
+  .tag.warn{border-color:rgba(255,207,107,.45);color:#ffcf6b;background:rgba(255,207,107,.08)}
+  .foot{position:absolute;bottom:22px;left:46px;font-size:13.5px;color:#7f92b3;font-family:Consolas,monospace}
+</style></head>
+<body><div class="wrap">
+  <div class="title">How mdctx keeps an agent's context small</div>
+  <div class="sub">Your Markdown stays in your repo and in your Git history. mdctx only measures it — and tells you which part is worth loading.</div>
+
+  <div class="flow">
+    <div class="card repo">
+      <h3>Your repository</h3>
+      <ul>
+        <li><code>AGENTS.md</code></li>
+        <li><code>docs/02_CURRENT_STATE.md</code></li>
+        <li><code>docs/CHANGELOG.md</code></li>
+        <li><code>docs/archive/**</code></li>
+        <li><code>vendor/**</code> <span style="color:#ff9d8f">generated</span></li>
+      </ul>
+    </div>
+    <div class="arrow">→</div>
+    <div class="card engine">
+      <h3>mdctx (read-only)</h3>
+      <ul>
+        <li><code>scan</code> — biggest first</li>
+        <li><code>check</code> — limits &amp; health</li>
+        <li><code>tokens</code> — startup / active</li>
+        <li><code>tasks</code> · <code>dupes</code></li>
+        <li style="color:#5ee07a">never stages, commits or pushes</li>
+      </ul>
+    </div>
+    <div class="arrow">→</div>
+    <div class="card out">
+      <h3>Split into cost tiers</h3>
+      <div class="rowhead start"><span>Startup docs — read every session</span><span class="cost">1,969 tok</span></div>
+      <div class="rowhead demand"><span>Active docs — on demand only</span><span class="cost">314,761 tok</span></div>
+      <div class="rowhead arch"><span>Ignored by rules — never counted</span><span class="cost">6,057,225 tok skipped</span></div>
+      <div style="font-size:13.5px;color:#8ea3c4;margin-top:8px">The three totals <code>mdctx tokens</code> prints for one real repo (Laravel cloud + Chrome extension, 1,767 files skipped).</div>
+    </div>
+    <div class="arrow">→</div>
+    <div class="card agent">
+      <h3>AI coding agent</h3>
+      <ul>
+        <li>loads the small set first</li>
+        <li>pulls detail only when needed</li>
+        <li>less context spent per turn</li>
+        <li>fewer stale notes in the way</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="tag">token counts measured with tiktoken</span>
+    <span class="tag warn">warns, never edits your files</span>
+    <span>No dependencies required for the core tool — Python 3.9+.</span>
+  </div>
+  <div class="foot">mdctx 0.2.0 · github.com/Nolmalza/md-context-kit</div>
+</div></body></html>

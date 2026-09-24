@@ -1,0 +1,70 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:1280px;height:620px;font-family:"Segoe UI",Arial,sans-serif;background:#0b1020;color:#e8eefc;overflow:hidden}
+  .wrap{width:1280px;height:620px;padding:34px 40px;background:radial-gradient(900px 380px at 12% 0%,rgba(88,166,255,.14),transparent 60%),linear-gradient(160deg,#0b1020,#0c142a 60%,#0b1020)}
+  .title{font-size:25px;font-weight:800;color:#fff}
+  .sub{margin-top:7px;font-size:15px;color:#a9b8d4}
+  .panes{display:flex;gap:22px;margin-top:24px}
+  .pane{flex:1;background:#070c17;border:1px solid rgba(255,255,255,.10);border-radius:13px;overflow:hidden;box-shadow:0 16px 40px rgba(0,0,0,.45)}
+  .pane.bad{border-color:rgba(255,207,107,.35)}
+  .bar{display:flex;align-items:center;gap:7px;padding:10px 13px;background:#0e1526;border-bottom:1px solid rgba(255,255,255,.07)}
+  .dot{width:11px;height:11px;border-radius:50%}.r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+  .bar span{margin-left:8px;font-size:12.5px;color:#8ea3c4;font-family:Consolas,monospace}
+  .lbl{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#7cc4ff;padding:9px 14px 0}
+  .lbl.warn{color:#ffcf6b}
+  pre{padding:10px 16px 16px;font-family:Consolas,"Cascadia Mono",monospace;font-size:13.4px;line-height:1.58;color:#d6e4ff;white-space:pre}
+  .dim{color:#7f92b3}.ok{color:#5ee07a}.key{color:#7cc4ff}.warnc{color:#ffcf6b}.bad{color:#ff9d8f}
+</style></head>
+<body><div class="wrap">
+  <div class="title">What <code style="font-family:Consolas,monospace;font-size:20px;color:#7cc4ff">mdctx check</code> tells you</div>
+  <div class="sub">Real output from two demo projects — same structure, one healthy and one that outgrew its budget.</div>
+
+  <div class="panes">
+    <div class="pane">
+      <div class="bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>demo-project — healthy</span></div>
+      <div class="lbl">Fresh project</div>
+<pre><span class="dim">$</span> mdctx init
+Files created:  6
+  + AGENTS.md   + docs/00_INDEX.md
+  + docs/context_registry.yml
+  + docs/01_PROJECT_BRIEF.md
+  + docs/02_CURRENT_STATE.md
+  + docs/CHANGELOG.md
+
+<span class="dim">$</span> mdctx check
+<span class="key">Startup set (read every session):</span>
+      323 tok  AGENTS.md
+      191 tok  docs/00_INDEX.md
+      444 tok  docs/context_registry.yml
+      202 tok  docs/01_PROJECT_BRIEF.md
+      113 tok  docs/02_CURRENT_STATE.md
+    <span class="ok">1,273 tok  TOTAL (budget 3,500)</span>
+
+<span class="ok">Warnings: none</span>
+Next recommended action:
+  Context looks healthy. Nothing to do.</pre>
+    </div>
+
+    <div class="pane bad">
+      <div class="bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><span>demo-bloated — needs trimming</span></div>
+      <div class="lbl warn">After a few weeks of journal-style notes</div>
+<pre><span class="dim">$</span> mdctx check
+<span class="key">Startup set (read every session):</span>
+      323 tok  AGENTS.md
+      191 tok  docs/00_INDEX.md
+      444 tok  docs/context_registry.yml
+      202 tok  docs/01_PROJECT_BRIEF.md
+    <span class="bad">1,833 tok  docs/02_CURRENT_STATE.md</span>
+    <span class="warnc">2,993 tok  TOTAL (budget 3,500)</span>
+
+<span class="warnc">Warnings (1):</span>
+  <span class="warnc">!</span> docs/02_CURRENT_STATE.md is ~1,833 tokens
+    (max 1,500). Move detail to the brief
+    or changelog.
+Next recommended action:
+  Address the warnings above, then re-run
+  <span class="dim">'mdctx check'</span>.</pre>
+    </div>
+  </div>
+</div></body></html>
