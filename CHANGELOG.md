@@ -55,8 +55,30 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 
 ## [Unreleased]
 
+Nothing yet — see [0.2.1] for the current release.
+
+## [0.2.1] - 2026-09-24
+
+### Added
+
+- mdctx now dogfoods itself: `AGENTS.md`, `docs/00_INDEX.md`,
+  `docs/context_registry.yml`, `docs/01_PROJECT_BRIEF.md`, `docs/02_CURRENT_STATE.md`,
+  `mdctx.json` and `.mdctxignore` describe this repository's own context, and
+  `mdctx check` on the project reports no warnings (startup set 2,655 of 3,500 tokens).
+
+### Fixed
+
+- **Ignore patterns for dot-directories never matched.** `project_config._match_pattern`
+  normalised patterns with `lstrip("./")`, which strips the leading dot, so every
+  dot-directory in the default list (`.pytest_cache`, `.venv`, `.mypy_cache`, `.cache`,
+  `.git`, …) was still scanned as project context and a project's own `.mdctxignore`
+  could not exclude one either. Two regression tests cover it.
+
 ### Changed
 
+- `tests/test_mdctx.py` no longer hardcodes the version: one test checks that
+  `pyproject.toml` and `src/md_context_kit/__init__.py` agree, and the `--json` test compares
+  against `__version__`, so a release bump cannot leave a mislabelled build.
 - Prepared the project for its first public GitHub release.
 - `context_registry.yml` now uses a richer per-entry schema
   (`id`, `title`, `type`, `status`, `file`, `read_when`, `scope`,
@@ -79,6 +101,7 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
   per-file size, and startup-doc token budget.
 - Read-only Git helper that only ever prints a suggested command.
 
-[Unreleased]: https://github.com/Nolmalza/md-context-kit/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Nolmalza/md-context-kit/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.1.0

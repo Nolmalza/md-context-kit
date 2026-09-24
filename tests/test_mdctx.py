@@ -58,8 +58,17 @@ def project(tmp_path: Path) -> Path:
 # ---------------------------------------------------------------------------
 # version / estimator
 # ---------------------------------------------------------------------------
-def test_version_is_020():
-    assert __version__ == "0.2.0"
+def test_version_matches_pyproject():
+    """The package version and pyproject.toml must agree: a release bump that touches only
+    one of them is the classic way to ship a mislabelled build."""
+    root = Path(__file__).resolve().parents[1]
+    declared = ""
+    for line in (root / "pyproject.toml").read_text(encoding="utf-8").splitlines():
+        if line.startswith("version"):
+            declared = line.split('"')[1]
+            break
+    assert declared, "no version found in pyproject.toml"
+    assert __version__ == declared
 
 
 def test_thai_detection():
@@ -109,6 +118,38 @@ def test_mdctxignore_file_is_honoured(project: Path):
     tracked = {f.rel for f in scan_detailed(project, cfg=cfg).files}
     assert "artifacts/BIG.md" not in tracked
     assert "notes_scratch.md" not in tracked
+
+
+def test_default_ignore_covers_dot_directories(project: Path):
+    """Regression: ``.lstrip("./")`` stripped the leading dot, so every dot-directory
+    in DEFAULT_IGNORE_DIRS (.pytest_cache, .venv, .mypy_cache, .git, …) silently
+    failed to match and its Markdown was counted as project context."""
+    for rel in (".pytest_cache/README.md", ".venv/lib/pkg/notes.md", ".mypy_cache/meta.md"):
+        p = project / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("z" * 400, encoding="utf-8")
+
+    result = scan_detailed(project)
+    tracked = {f.rel for f in result.files}
+    for rel in (".pytest_cache/README.md", ".venv/lib/pkg/notes.md", ".mypy_cache/meta.md"):
+        assert rel not in tracked
+    assert result.ignored_files >= 1
+
+
+def test_ignore_patterns_match_dot_directories_and_dot_slash(project: Path):
+    (project / ".mdctxignore").write_text(
+        "# dot directories, written the .gitignore way\n.pytest_cache/\n./artifacts/\n",
+        encoding="utf-8",
+    )
+    for rel in (".pytest_cache/README.md", "artifacts/big.md"):
+        p = project / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("z" * 400, encoding="utf-8")
+
+    cfg = load_config(project)
+    assert cfg.is_ignored(".pytest_cache/README.md")
+    assert cfg.is_ignored("artifacts/big.md")
+    assert not cfg.is_ignored("docs/02_CURRENT_STATE.md")
 
 
 def test_mdctx_json_overrides_limits_and_startup(project: Path):
@@ -196,7 +237,7 @@ def test_cli_check_json_is_machine_readable(project: Path, capsys):
     payload = json.loads(capsys.readouterr().out)
     assert payload["tool"] == "mdctx"
     assert payload["command"] == "check"
-    assert payload["version"] == "0.2.0"
+    assert payload["version"] == __version__
     assert "startup_tokens" in payload["data"]
     assert isinstance(payload["warnings"], list)
     assert code == 0
