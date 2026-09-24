@@ -4,20 +4,18 @@ Snapshot, not history. Detail: `CHANGELOG.md`; rationale: `docs/why-md-context-k
 
 ## Stage
 
-**0.2.0 released.** Merged to `main` (PR #1, merge commit `340771c`), tagged `v0.2.0`, and
-published as a GitHub release with notes from `CHANGELOG.md`. Previous release: `v0.1.0`
-(`888a9ce`).
+**0.2.1 release candidate.** PR #2 (branch `chore/self-context`, version bumped to 0.2.1)
+carries this repository's own context set — the dogfooding work — plus a fix for ignore
+patterns on dot-directories. Dogfooding found that `_match_pattern` stripped the leading dot,
+so `.pytest_cache/`, `.venv/` and the rest of the default list were still counted as context
+and could not be excluded by a project either.
 
-Shipped in 0.2.0: `.mdctxignore` + `mdctx.json` project configuration, `--json` on every
-command, `check --strict` as a CI gate, `mdctx tasks` and `mdctx dupes`, registry health
-checks (dangling references, `read_when: never` in the startup set, loose docs), and a
-language-aware token fallback for Thai-heavy projects.
-
-**In review, unreleased** (branch `chore/self-context`): this repository's own context set —
-the dogfooding work below — plus a fix for ignore patterns on dot-directories. Dogfooding
-found that `_match_pattern` stripped the leading dot, so `.pytest_cache/`, `.venv/` and the
-rest of the default list were still counted as context and could not be excluded by a
-project either. That fix belongs in a **0.2.1** patch release.
+Previously released: **0.2.0** (PR #1, merge commit `340771c`, tag `v0.2.0`, GitHub release
+with notes from `CHANGELOG.md`) — it shipped `.mdctxignore` + `mdctx.json` project
+configuration, `--json` on every command, `check --strict` as a CI gate, `mdctx tasks` and
+`mdctx dupes`, registry health checks (dangling references, `read_when: never` in the startup
+set, loose docs), and a language-aware token fallback for Thai-heavy projects. Before that:
+`v0.1.0` (`888a9ce`).
 
 ## Test status
 
@@ -32,7 +30,7 @@ The repository is dogfooding `mdctx` on itself since 0.2.0.
 
 ## Open items (not scheduled)
 
-- **0.2.1 patch release pending** for the ignore-pattern fix currently on `chore/self-context`.
+- `v0.2.0` will still carry the dot-directory ignore bug once 0.2.1 ships; **0.2.1 supersedes it.**
 - No PyPI publication yet — install is from source (`pip install -e ".[tokens]"`).
 - No GitHub Actions workflow to run `pytest` and `mdctx check --strict` on pull requests.
 - `mdctx rotate` handles snapshots only; rotating a changelog is still a manual edit.
@@ -41,7 +39,6 @@ The repository is dogfooding `mdctx` on itself since 0.2.0.
 
 ## Next action
 
-Merge `chore/self-context`, then cut **0.2.1** (tag + release notes from the `[Unreleased]`
-section of `CHANGELOG.md`) so the ignore-pattern fix is published. The first candidate for a
-real milestone after that is a GitHub Actions workflow running `pytest` plus
-`mdctx check --strict` on every pull request.
+Tag `v0.2.1` at the merge commit of PR #2 and publish the release with notes from the
+`[0.2.1]` section of `CHANGELOG.md`. The first candidate for a real milestone after that is a
+GitHub Actions workflow running `pytest` plus `mdctx check --strict` on every pull request.

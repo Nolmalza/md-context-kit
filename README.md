@@ -6,7 +6,7 @@
 
 **Keep an AI coding agent's project context small, structured and measured.**
 
-[![version](https://img.shields.io/badge/version-0.2.0-58a6ff)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-0.2.1-58a6ff)](CHANGELOG.md)
 [![python](https://img.shields.io/badge/python-3.9%2B-3776ab)](pyproject.toml)
 [![license](https://img.shields.io/badge/license-MIT-2ea043)](LICENSE)
 [![tests](https://img.shields.io/badge/tests-23%20passing-2ea043)](tests/test_mdctx.py)

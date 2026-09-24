@@ -55,6 +55,10 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 
 ## [Unreleased]
 
+Nothing yet — see [0.2.1] for the current release.
+
+## [0.2.1] - 2026-09-24
+
 ### Added
 
 - mdctx now dogfoods itself: `AGENTS.md`, `docs/00_INDEX.md`,
@@ -94,6 +98,7 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
   per-file size, and startup-doc token budget.
 - Read-only Git helper that only ever prints a suggested command.
 
-[Unreleased]: https://github.com/Nolmalza/md-context-kit/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/Nolmalza/md-context-kit/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.1.0
