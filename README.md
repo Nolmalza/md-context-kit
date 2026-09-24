@@ -6,10 +6,10 @@
 
 **Keep an AI coding agent's project context small, structured and measured.**
 
-[![version](https://img.shields.io/badge/version-0.2.1-58a6ff)](CHANGELOG.md)
+[![version](https://img.shields.io/badge/version-0.2.2-58a6ff)](CHANGELOG.md)
 [![python](https://img.shields.io/badge/python-3.9%2B-3776ab)](pyproject.toml)
 [![license](https://img.shields.io/badge/license-MIT-2ea043)](LICENSE)
-[![tests](https://img.shields.io/badge/tests-23%20passing-2ea043)](tests/test_mdctx.py)
+[![tests](https://img.shields.io/badge/tests-24%20passing-2ea043)](tests/test_mdctx.py)
 [![dependencies](https://img.shields.io/badge/core%20dependencies-0-6e7681)](pyproject.toml)
 [![PRs](https://img.shields.io/badge/PRs-welcome-8957e5)](CONTRIBUTING.md)
 
@@ -81,16 +81,22 @@ The registry gives every context file a stable `id`, a `type`, a `status`, a `re
 hint (`startup`, `on-demand`, `never`) and a `scope`, so rules can be referenced instead
 of repeated. See [docs/registry-format.md](docs/registry-format.md).
 
-## Measured on real projects
+## Measured, reproducibly
 
 <div align="center">
-  <img src="assets/context-cost.png" alt="Chart: three real repositories, showing context kept versus dependency and generated Markdown skipped by the default ignore rules" width="100%">
+  <img src="assets/context-cost.png" alt="Chart: two projects — the demo fixture shipped with mdctx and this repository — showing context kept versus dependency and generated Markdown skipped by the ignore rules" width="100%">
 </div>
 
 Dependency, build and cache folders (`vendor`, `node_modules`, `dist`, `build`,
 `target`, `__pycache__`, …) are ignored by default, and every command reports how many
-files and tokens the rules removed — so the numbers stay explainable. Reproduce with
-`mdctx tokens -C <project> --json`.
+files and tokens the rules removed — so the numbers stay explainable. Both rows are
+re-creatable from a clone:
+
+```bash
+python scripts/make-demo-fixture.py      # prints the demo project's path
+mdctx tokens -C <printed path> --json    # the demo fixture row
+mdctx tokens -C . --json                 # this repository's row
+```
 
 ## Features
 
@@ -195,4 +201,4 @@ Issues and pull requests are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) 
 
 ## License
 
-[MIT](LICENSE) © 2026 botbas.
+[MIT](LICENSE) © 2026 Nolmalza.

@@ -14,7 +14,7 @@ Please report security issues privately rather than opening a public issue:
 
 - Use GitHub's **"Report a vulnerability"** feature under the repository's
   **Security** tab (Private vulnerability reporting), or
-- Contact the maintainer (botbas) privately through the repository profile.
+- Contact the maintainer (Nolmalza) privately through the repository profile.
 
 When reporting, please include:
 

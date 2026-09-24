@@ -55,7 +55,23 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 
 ## [Unreleased]
 
-Nothing yet — see [0.2.1] for the current release.
+Nothing yet — see [0.2.2] for the current release.
+
+## [0.2.2] - 2026-09-24
+
+### Added
+
+- `scripts/make-demo-fixture.py` — generates the throwaway demo project (76 files: six context
+  documents plus a dependency tree) whose measurements appear in the README figures. Nothing
+  from it is committed; run it and re-measure with `mdctx tokens -C <path> --json`.
+
+### Changed
+
+- **This repository no longer references any third-party project.** The README figures quote only
+  measurements a clone can reproduce — the demo fixture above (`422 tok kept · 19,076 tok
+  skipped`) and this repository itself (`11,603 tok kept · 1,550 tok skipped`). `LICENSE`,
+  `pyproject.toml`, `README.md` and `SECURITY.md` now name the maintainer (Nolmalza) instead of
+  the company that develops the tool.
 
 ## [0.2.1] - 2026-09-24
 
@@ -101,7 +117,8 @@ Nothing yet — see [0.2.1] for the current release.
   per-file size, and startup-doc token budget.
 - Read-only Git helper that only ever prints a suggested command.
 
-[Unreleased]: https://github.com/Nolmalza/md-context-kit/compare/v0.2.1...HEAD
+[Unreleased]: https://github.com/Nolmalza/md-context-kit/compare/v0.2.2...HEAD
+[0.2.2]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.2.2
 [0.2.1]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.2.1
 [0.2.0]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.2.0
 [0.1.0]: https://github.com/Nolmalza/md-context-kit/releases/tag/v0.1.0
