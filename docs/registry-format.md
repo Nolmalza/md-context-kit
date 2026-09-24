@@ -107,7 +107,18 @@ form. Helps an agent judge whether a note is still current.
 
 ## How `mdctx` uses it
 
-The current release treats `context_registry.yml` as one of the startup docs:
-it checks the file exists and counts it toward the startup token budget. The
-field schema above is read by humans and AI agents; future `mdctx` versions may
-parse it directly.
+`context_registry.yml` is a startup doc: `mdctx` checks that the file exists and
+counts it toward the startup token budget.
+
+Since 0.2.0 the field schema above is also **parsed**:
+
+- `file:` entries are resolved against the project root; a reference to a file
+  that does not exist is reported as a warning by `mdctx check`.
+- `read_when: startup` entries are recognised as the registry's own startup set,
+  and `mdctx check` warns when one of them is missing from `startup_files`.
+- `read_when: never` and `status: archived` mark material that should not be
+  auto-loaded.
+- `mdctx tasks` prices each section — including the simpler
+  `task: → [paths]` map style, where the section name is the task.
+
+`mdctx` still does not write to this file. It is yours to edit.

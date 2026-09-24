@@ -87,11 +87,20 @@ full rationale.
 
 ## Features
 
-- `mdctx` command line with `init`, `check`, `scan`, `tokens`, `refresh`
-  (`--apply`, `--tokens`), `snapshot`, and `rotate`.
+- `mdctx` command line with `init`, `check`, `scan`, `tokens`, `tasks`, `dupes`,
+  `refresh` (`--apply`, `--tokens`), `snapshot`, and `rotate`.
+- `.mdctxignore` + `mdctx.json`: per-project ignore rules and limits, with
+  dependency and build folders (`vendor`, `node_modules`, `dist`, `build`, …)
+  ignored by default.
+- `--json` on every command, so an agent or CI job can act on the numbers.
+- `check --strict` exits non-zero when there are warnings, so it can gate a
+  workflow.
+- `mdctx tasks` prices each reading list in the registry, and `mdctx dupes`
+  finds context files that cost tokens twice.
 - Generic, blank Markdown templates you adapt to your project.
 - Required-file checks with clear warnings.
-- Token estimation via `tiktoken` when installed, with a `chars / 4` fallback.
+- Token estimation via `tiktoken` when installed, with a language-aware fallback
+  (Thai ~1 token per character, Latin ~4 characters per token).
 - Size limits for the current-state doc, changelog, individual files, and the
   startup set.
 - A machine-readable context registry.
@@ -126,16 +135,21 @@ pip install "md-context-kit[tokens]"   # accurate token counts
 ```bash
 mdctx init                          # create missing context files from templates
 mdctx check                         # check required files exist and are healthy
+mdctx check --strict                # same, but exit non-zero on warnings
 mdctx scan                          # list context files with line and token counts
+mdctx scan --all                    # list every tracked file, not just the top 40
 mdctx tokens                        # estimated tokens: startup / active / all docs
+mdctx tasks                         # token cost of each task's reading list
+mdctx dupes                         # context files whose content is identical
 mdctx refresh                       # dry run: report what a refresh would create
 mdctx refresh --apply               # create missing files from templates
 mdctx refresh --apply --tokens      # apply, and also print the token report
 mdctx snapshot                      # create a short, dated snapshot
 mdctx rotate                        # move old snapshots into the archive
 
-# Operate on another directory
-mdctx check -C ./path/to/project
+# Machine-readable output for agents and CI
+mdctx check --json
+mdctx tokens --json -C ./path/to/project
 ```
 
 You can also run it as a module: `python -m md_context_kit.cli check`.
@@ -154,6 +168,43 @@ your-project/
     ├── snapshots/                Short, dated snapshots (from `snapshot`)
     └── archive/                  Older material; not read by default
 ```
+
+## Configuration (`.mdctxignore`, `mdctx.json`)
+
+Both files are optional and live in the project root.
+
+`.mdctxignore` is plain text, one pattern per line (`#` starts a comment), in the
+spirit of `.gitignore`:
+
+```
+artifacts/
+deploy/
+*.zip
+```
+
+`mdctx.json` holds structured overrides:
+
+```json
+{
+  "ignore": ["artifacts/**"],
+  "required_files": ["AGENTS.md", "docs/02_CURRENT_STATE.md"],
+  "startup_files": ["AGENTS.md", "docs/02_CURRENT_STATE.md"],
+  "current_state": "docs/02_CURRENT_STATE.md",
+  "changelog": "docs/12_CHANGELOG.md",
+  "registry": "docs/context_registry.yml",
+  "limits": { "startup_total_warn_tokens": 3500 }
+}
+```
+
+Dependency, build and cache directories (`vendor`, `node_modules`, `dist`,
+`build`, `target`, `__pycache__`, …) are ignored by default. Every command
+reports how many files and tokens the ignore rules removed, so the numbers stay
+explainable.
+
+Real example: on a Laravel project the scanner counted `vendor/**` as context and
+reported ~606,000 tokens across 334 files — 90% of it dependency documentation
+that no agent should ever load. With the default ignore rules the same project
+reports ~63,000 tokens across 35 real context files.
 
 ## Startup docs
 
@@ -213,7 +264,10 @@ summary**.
 controllable:
 
 - With [`tiktoken`](https://github.com/openai/tiktoken) installed, counts are
-  accurate (`cl100k_base`). Otherwise `mdctx` estimates `character_count / 4`.
+  accurate (`cl100k_base`). Otherwise `mdctx` uses a language-aware fallback:
+  Thai costs ~1 token per character, Latin ~0.25, so a Thai document is not
+  under-counted by roughly 4x the way a flat `character_count / 4` would.
+  Install `tiktoken` for any Thai-heavy project.
 - `mdctx tokens` reports three totals: **startup docs**, **active docs**, and
   **all docs (incl. archive)**.
 

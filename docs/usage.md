@@ -4,10 +4,11 @@ A step-by-step guide to using `mdctx`, followed by a reference for every
 command. Run `mdctx --help` or `mdctx <command> --help` for the built-in help.
 
 All commands accept `-C` / `--path` to target a project other than the current
-directory:
+directory, and `--json` to emit one machine-readable object instead of text:
 
 ```bash
 mdctx check -C ./path/to/project
+mdctx check --json -C ./path/to/project
 ```
 
 Every command ends with a standard summary: files checked, files created, files
@@ -115,6 +116,34 @@ Report estimated token usage for three groups:
 - **startup docs** — the five files an agent reads first.
 - **active docs** — startup docs plus all other non-archive Markdown.
 - **all docs (incl. archive)** — everything, archive included.
+
+### `mdctx tasks`
+
+Price the reading list of every task in `context_registry.yml`. Each section of
+the registry becomes a row with the total token cost of the files it tells an
+agent to read, so you can see which task is expensive to start:
+
+```
+   tokens  files  task
+    1,922      2  meta_api
+      940      1  billing_vat
+```
+
+The command understands both registry shapes: the per-entry `file:` schema and
+the simpler `task: → [paths]` map.
+
+### `mdctx dupes`
+
+Group context files whose content is identical (line endings and trailing
+whitespace are ignored) and report the redundant token cost — the cheapest token
+saving available, because two copies of a document cost twice as much and drift
+apart over time.
+
+### `mdctx check --strict`
+
+Same checks as `mdctx check`, but exits with status 1 when there are warnings, so
+it can be used as a gate in a workflow (a milestone close-out, a pre-commit hook,
+or CI).
 
 ### `mdctx refresh`
 

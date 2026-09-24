@@ -8,13 +8,30 @@ your content.
 
 - If [`tiktoken`](https://github.com/openai/tiktoken) is installed, `mdctx` uses
   it (the `cl100k_base` encoding) for accurate counts.
-- Otherwise it falls back to `character_count / 4`, a rough but useful estimate.
+- Otherwise it falls back to a language-aware heuristic: Thai text costs about
+  1 token per character and Latin text about 0.25 tokens per character. A flat
+  `character_count / 4` was measured to under-count a pure-Thai document by ~74%,
+  which is why the fallback weights Thai separately.
 
 Install accurate counting with:
 
 ```bash
 pip install "md-context-kit[tokens]"
 ```
+
+## Configuring the limits
+
+The limits below are the built-in defaults. Every one of them can be overridden
+per project in `mdctx.json`:
+
+```json
+{ "limits": { "current_state_max_tokens": 1500, "startup_total_warn_tokens": 3500,
+              "snapshots_to_keep": 5, "max_listed_files": 40 } }
+```
+
+Use this when a project legitimately has a bigger startup set (a workspace with
+several role documents, for example) instead of silencing a warning that is
+telling you something true.
 
 ## Recommended limits
 

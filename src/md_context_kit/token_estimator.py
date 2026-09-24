@@ -1,14 +1,22 @@
 """Estimate token usage for Markdown context files.
 
-Token counts are an estimate of how much of an AI agent's context window a file
-will consume. Accurate counts use ``tiktoken`` when it is installed; otherwise a
-simple ``character_count / 4`` heuristic is used.
+Accurate counts use ``tiktoken`` when it is installed. The fallback is no
+longer a flat ``chars / 4``: that heuristic is badly wrong for Thai, measured on
+real project docs (pure Thai prose ≈ 0.96 tokens per character, mixed
+Thai/English/code docs ≈ 0.25). The fallback therefore weights Thai codepoints
+separately, so a Thai-heavy document is not under-counted by roughly 4x.
 """
 
 from __future__ import annotations
 
-_CHARS_PER_TOKEN = 4
+_CHARS_PER_TOKEN_LATIN = 4.0
+_TOKENS_PER_THAI_CHAR = 0.96
 _ENCODING = "cl100k_base"
+
+# Thai block. Thai characters cost ~1 token each in cl100k_base, unlike Latin
+# text at ~4 characters per token.
+_THAI_START = 0x0E00
+_THAI_END = 0x0E7F
 
 # Cache the encoder so repeated calls do not re-load it.
 _encoder = None
@@ -30,15 +38,29 @@ def _get_encoder():
     return _encoder
 
 
+def thai_char_count(text: str) -> int:
+    """Number of Thai-block characters in *text*."""
+    return sum(1 for ch in text if _THAI_START <= ord(ch) <= _THAI_END)
+
+
+def thai_ratio(text: str) -> float:
+    """Share of characters that are Thai (0.0 - 1.0)."""
+    if not text:
+        return 0.0
+    return thai_char_count(text) / len(text)
+
+
 def _heuristic(text: str) -> int:
-    return max(1, len(text) // _CHARS_PER_TOKEN)
+    thai = thai_char_count(text)
+    other = len(text) - thai
+    return max(1, int(thai * _TOKENS_PER_THAI_CHAR + other / _CHARS_PER_TOKEN_LATIN))
 
 
 def estimate_tokens(text: str) -> int:
     """Estimate the number of tokens in *text*.
 
     Uses ``tiktoken`` when available for an accurate count, and falls back to a
-    ``len(text) // 4`` heuristic otherwise.
+    language-aware heuristic otherwise (Thai ~1 token/char, Latin ~4 chars/token).
     """
     if not text:
         return 0
@@ -54,3 +76,8 @@ def estimate_tokens(text: str) -> int:
 def using_tiktoken() -> bool:
     """Return True if accurate tiktoken counting is available."""
     return _get_encoder() is not None
+
+
+def thai_needs_tiktoken(text: str, threshold: float = 0.10) -> bool:
+    """True when the fallback heuristic would be unreliable for this text."""
+    return not using_tiktoken() and thai_ratio(text) >= threshold
