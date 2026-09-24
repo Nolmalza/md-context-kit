@@ -124,14 +124,19 @@ def _match_pattern(rel: str, parts: list[str], pat: str) -> bool:
     pat = pat.strip()
     if not pat or pat.startswith("#"):
         return False
-    pat = pat.lstrip("./") if not pat.startswith("/") else pat.lstrip("/")
+    if pat.startswith("/"):
+        pat = pat.lstrip("/")          # "/artifacts/" -> root-anchored
+    elif pat.startswith("./"):
+        pat = pat[2:]                  # "./artifacts/" == "artifacts/"
 
     # "artifacts/" or "artifacts" -> that directory and everything under it
     if pat.endswith("/"):
         head = pat.rstrip("/")
         return rel == head or rel.startswith(head + "/")
     if "/" not in pat and not any(ch in pat for ch in "*?["):
-        # bare name matches any single path segment (like .gitignore)
+        # bare name matches any single path segment (like .gitignore) — this is
+        # how the default dot-directories (.venv, .pytest_cache, …) are matched,
+        # so a leading dot must survive normalisation
         return pat in parts
     if fnmatch.fnmatch(rel, pat):
         return True

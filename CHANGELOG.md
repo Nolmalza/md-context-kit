@@ -55,6 +55,21 @@ on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to
 
 ## [Unreleased]
 
+### Added
+
+- mdctx now dogfoods itself: `AGENTS.md`, `docs/00_INDEX.md`,
+  `docs/context_registry.yml`, `docs/01_PROJECT_BRIEF.md`, `docs/02_CURRENT_STATE.md`,
+  `mdctx.json` and `.mdctxignore` describe this repository's own context, and
+  `mdctx check` on the project reports no warnings (startup set 2,471 of 3,500 tokens).
+
+### Fixed
+
+- **Ignore patterns for dot-directories never matched.** `project_config._match_pattern`
+  normalised patterns with `lstrip("./")`, which strips the leading dot, so every
+  dot-directory in the default list (`.pytest_cache`, `.venv`, `.mypy_cache`, `.cache`,
+  `.git`, …) was still scanned as project context and a project's own `.mdctxignore`
+  could not exclude one either. Two regression tests cover it.
+
 ### Changed
 
 - Prepared the project for its first public GitHub release.

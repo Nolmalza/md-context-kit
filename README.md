@@ -9,7 +9,7 @@
 [![version](https://img.shields.io/badge/version-0.2.0-58a6ff)](CHANGELOG.md)
 [![python](https://img.shields.io/badge/python-3.9%2B-3776ab)](pyproject.toml)
 [![license](https://img.shields.io/badge/license-MIT-2ea043)](LICENSE)
-[![tests](https://img.shields.io/badge/tests-21%20passing-2ea043)](tests/test_mdctx.py)
+[![tests](https://img.shields.io/badge/tests-23%20passing-2ea043)](tests/test_mdctx.py)
 [![dependencies](https://img.shields.io/badge/core%20dependencies-0-6e7681)](pyproject.toml)
 [![PRs](https://img.shields.io/badge/PRs-welcome-8957e5)](CONTRIBUTING.md)
 

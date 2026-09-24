@@ -1,0 +1,9 @@
+# mdctx ignore rules for md-context-kit itself.
+# The shipped template and example Markdown is payload for other projects,
+# not context for agents working on this repository.
+templates/
+examples/
+# Local test/build junk that must never count as context.
+.pytest_cache/
+.venv/
+*.egg-info/

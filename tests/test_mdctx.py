@@ -111,6 +111,38 @@ def test_mdctxignore_file_is_honoured(project: Path):
     assert "notes_scratch.md" not in tracked
 
 
+def test_default_ignore_covers_dot_directories(project: Path):
+    """Regression: ``.lstrip("./")`` stripped the leading dot, so every dot-directory
+    in DEFAULT_IGNORE_DIRS (.pytest_cache, .venv, .mypy_cache, .git, …) silently
+    failed to match and its Markdown was counted as project context."""
+    for rel in (".pytest_cache/README.md", ".venv/lib/pkg/notes.md", ".mypy_cache/meta.md"):
+        p = project / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("z" * 400, encoding="utf-8")
+
+    result = scan_detailed(project)
+    tracked = {f.rel for f in result.files}
+    for rel in (".pytest_cache/README.md", ".venv/lib/pkg/notes.md", ".mypy_cache/meta.md"):
+        assert rel not in tracked
+    assert result.ignored_files >= 1
+
+
+def test_ignore_patterns_match_dot_directories_and_dot_slash(project: Path):
+    (project / ".mdctxignore").write_text(
+        "# dot directories, written the .gitignore way\n.pytest_cache/\n./artifacts/\n",
+        encoding="utf-8",
+    )
+    for rel in (".pytest_cache/README.md", "artifacts/big.md"):
+        p = project / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("z" * 400, encoding="utf-8")
+
+    cfg = load_config(project)
+    assert cfg.is_ignored(".pytest_cache/README.md")
+    assert cfg.is_ignored("artifacts/big.md")
+    assert not cfg.is_ignored("docs/02_CURRENT_STATE.md")
+
+
 def test_mdctx_json_overrides_limits_and_startup(project: Path):
     (project / "mdctx.json").write_text(
         json.dumps(

@@ -1,0 +1,129 @@
+# Registry of context files for md-context-kit itself.
+# Schema: docs/registry-format.md — `read_when` is startup | on-demand | never.
+
+context:
+  - id: agents
+    title: Agent entry rules
+    type: rule
+    status: active
+    file: AGENTS.md
+    read_when: startup
+    scope: global
+    last_updated: 2026-09-24
+
+  - id: current_state
+    title: Current state
+    type: state
+    status: active
+    file: docs/02_CURRENT_STATE.md
+    read_when: startup
+    scope: global
+    last_updated: 2026-09-24
+
+  - id: index
+    title: Documentation map
+    type: index
+    status: active
+    file: docs/00_INDEX.md
+    read_when: startup
+    scope: global
+    last_updated: 2026-09-24
+
+  - id: brief
+    title: Project brief
+    type: brief
+    status: active
+    file: docs/01_PROJECT_BRIEF.md
+    read_when: startup
+    scope: global
+    last_updated: 2026-09-24
+
+  - id: readme
+    title: Public README
+    type: doc
+    status: active
+    file: README.md
+    read_when: on-demand
+    scope: global
+    last_updated: 2026-09-24
+
+  - id: changelog
+    title: Changelog
+    type: changelog
+    status: active
+    file: CHANGELOG.md
+    read_when: on-demand
+    scope: global
+    last_updated: 2026-09-24
+
+  - id: usage
+    title: CLI usage
+    type: doc
+    status: active
+    file: docs/usage.md
+    read_when: on-demand
+    scope: commands
+    last_updated: 2026-06-25
+
+  - id: token_limits
+    title: Token limits and budgets
+    type: doc
+    status: active
+    file: docs/token-limits.md
+    read_when: on-demand
+    scope: tokens
+    last_updated: 2026-06-25
+
+  - id: registry_format
+    title: Registry format
+    type: doc
+    status: active
+    file: docs/registry-format.md
+    read_when: on-demand
+    scope: registry
+    last_updated: 2026-06-25
+
+  - id: rationale
+    title: Why MD Context Kit
+    type: doc
+    status: active
+    file: docs/why-md-context-kit.md
+    read_when: on-demand
+    scope: design
+    last_updated: 2026-06-25
+
+  - id: template_rules
+    title: Public template rules
+    type: rule
+    status: active
+    file: docs/public-template-rules.md
+    read_when: on-demand
+    scope: templates
+    last_updated: 2026-06-25
+
+  - id: contributing
+    title: Contributing guide
+    type: doc
+    status: active
+    file: CONTRIBUTING.md
+    read_when: on-demand
+    scope: project
+    last_updated: 2026-06-25
+
+  - id: security
+    title: Security policy
+    type: doc
+    status: active
+    file: SECURITY.md
+    read_when: on-demand
+    scope: project
+    last_updated: 2026-06-25
+
+  - id: examples_readme
+    title: Example context set
+    type: example
+    status: active
+    file: examples/generic/README.md
+    read_when: on-demand
+    scope: examples
+    last_updated: 2026-06-25
