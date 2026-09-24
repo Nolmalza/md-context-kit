@@ -76,6 +76,9 @@ Nothing yet — see [0.2.1] for the current release.
 
 ### Changed
 
+- `tests/test_mdctx.py` no longer hardcodes the version: one test checks that
+  `pyproject.toml` and `src/md_context_kit/__init__.py` agree, and the `--json` test compares
+  against `__version__`, so a release bump cannot leave a mislabelled build.
 - Prepared the project for its first public GitHub release.
 - `context_registry.yml` now uses a richer per-entry schema
   (`id`, `title`, `type`, `status`, `file`, `read_when`, `scope`,

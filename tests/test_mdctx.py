@@ -58,8 +58,17 @@ def project(tmp_path: Path) -> Path:
 # ---------------------------------------------------------------------------
 # version / estimator
 # ---------------------------------------------------------------------------
-def test_version_is_020():
-    assert __version__ == "0.2.0"
+def test_version_matches_pyproject():
+    """The package version and pyproject.toml must agree: a release bump that touches only
+    one of them is the classic way to ship a mislabelled build."""
+    root = Path(__file__).resolve().parents[1]
+    declared = ""
+    for line in (root / "pyproject.toml").read_text(encoding="utf-8").splitlines():
+        if line.startswith("version"):
+            declared = line.split('"')[1]
+            break
+    assert declared, "no version found in pyproject.toml"
+    assert __version__ == declared
 
 
 def test_thai_detection():
@@ -228,7 +237,7 @@ def test_cli_check_json_is_machine_readable(project: Path, capsys):
     payload = json.loads(capsys.readouterr().out)
     assert payload["tool"] == "mdctx"
     assert payload["command"] == "check"
-    assert payload["version"] == "0.2.0"
+    assert payload["version"] == __version__
     assert "startup_tokens" in payload["data"]
     assert isinstance(payload["warnings"], list)
     assert code == 0
