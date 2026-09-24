@@ -1,0 +1,54 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{width:1280px;height:520px;font-family:"Segoe UI",Arial,sans-serif;background:#0b1020;color:#e8eefc;overflow:hidden}
+  .wrap{width:1280px;height:520px;padding:34px 44px;background:radial-gradient(880px 360px at 85% 0%,rgba(126,231,135,.10),transparent 62%),linear-gradient(160deg,#0b1020,#0c142a 60%,#0b1020)}
+  .title{font-size:25px;font-weight:800;color:#fff}
+  .sub{margin-top:7px;font-size:15px;color:#a9b8d4}
+  .legend{display:flex;gap:22px;margin-top:14px;font-size:13.5px;color:#c3d0e6}
+  .sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-1px}
+  .kept{background:#58a6ff}.skip{background:#ff9d8f}
+  .chart{margin-top:20px}
+  .row{margin-bottom:20px}
+  .rowhead{display:flex;justify-content:space-between;font-size:14.5px;color:#dbe6f7;margin-bottom:7px}
+  .rowhead b{color:#fff;font-weight:600}
+  .rowhead span.meta{font-family:Consolas,monospace;font-size:13px;color:#8ea3c4}
+  .track{position:relative;height:30px;border-radius:7px;overflow:hidden;display:flex;border:1px solid rgba(255,255,255,.10)}
+  .seg{height:100%;display:flex;align-items:center;font-family:Consolas,monospace;font-size:12.8px;color:#08101f;font-weight:700;padding-left:9px;white-space:nowrap}
+  .seg.k{background:linear-gradient(90deg,#58a6ff,#79c0ff);color:#06101f}
+  .seg.s{background:linear-gradient(90deg,#ff9d8f,#ff7b72);justify-content:flex-end;padding-right:9px}
+  .axis{display:flex;justify-content:space-between;font-family:Consolas,monospace;font-size:12.5px;color:#7f92b3;margin-top:14px;border-top:1px solid rgba(255,255,255,.10);padding-top:9px}
+  .foot{margin-top:12px;font-size:13.3px;color:#8ea3c4}
+</style></head>
+<body><div class="wrap">
+  <div class="title">Measured on real projects: what the default ignore rules remove</div>
+  <div class="sub">Same command, three repositories on the machine that develops mdctx — dependency and generated Markdown is skipped, real context is kept.</div>
+  <div class="legend"><span><i class="sw kept"></i>context kept (active + archive)</span><span><i class="sw skip"></i>skipped by ignore rules (vendor, node_modules, generated artifacts)</span></div>
+
+  <div class="chart">
+    <div class="row">
+      <div class="rowhead"><span><b>affiliate repo</b> — Laravel cloud + Chrome extension</span><span class="meta">skipped 6,057,225 tok in 1,767 files</span></div>
+      <div class="track">
+        <div class="seg k" style="width:5.04%">5%</div>
+        <div class="seg s" style="width:94.96%">321,193 tok kept &nbsp;·&nbsp; 6,057,225 tok skipped</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="rowhead"><span><b>botbas_crm_subib</b> — plain-PHP CRM, no package manager</span><span class="meta">skipped 26,493 tok in 2 files</span></div>
+      <div class="track">
+        <div class="seg k" style="width:87.10%">178,954 tok kept</div>
+        <div class="seg s" style="width:12.90%">13%</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="rowhead"><span><b>stock DCA radar</b> — Laravel market app</span><span class="meta">skipped 278,420 tok in 256 files</span></div>
+      <div class="track">
+        <div class="seg k" style="width:20.69%">20.7%</div>
+        <div class="seg s" style="width:79.31%">72,626 tok kept &nbsp;·&nbsp; 278,420 tok skipped</div>
+      </div>
+    </div>
+    <div class="axis"><span>0%</span><span>share of all Markdown found in the project</span><span>100%</span></div>
+  </div>
+
+  <div class="foot">Reproduce with <code>mdctx tokens -C &lt;project&gt; --json</code> · counted with tiktoken <code>cl100k_base</code> · measured 2026-09-24.</div>
+</div></body></html>
